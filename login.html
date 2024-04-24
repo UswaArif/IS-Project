@@ -6,8 +6,67 @@
 	<link rel="stylesheet" type="text/css" href="css/nav_logo.css">
 	<script type="text/javascript" src="js/cookies.js"></script>
 	<!--<script type="text/javascript" src="js/excel_login.js"></script> -->
+
+	<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+	<script type="text/javascript">
+		// Initialize Firebase
+		const firebaseConfig = {
+		  apiKey: "AIzaSyC0J2EJSfvhdOeNCJ7hi5JupUmAoiqLMAM",
+		  authDomain: "aspiring-8cf7e.firebaseapp.com",
+		  projectId: "aspiring-8cf7e",
+		  storageBucket: "aspiring-8cf7e.appspot.com",
+		  messagingSenderId: "414896381702",
+		  appId: "1:414896381702:web:0eee893e5e06e850924887",
+		  measurementId: "G-4TET5G58Q9"
+		};
+
+		firebase.initializeApp(firebaseConfig);
+
+		function validate(event) {
+			event.preventDefault(); // Prevent form submission
+
+			var username = document.forms["login_info"]["usrname"].value;
+			var password = document.forms["login_info"]["pswd"].value;
+
+			if (!username || !password) {
+				document.getElementById("show_err").textContent = "Please enter both username and password";
+				return;
+			}
+
+			const db = firebase.firestore();
+			const usersRef = db.collection("Users");
+
+			// Query Firestore for the user with the provided username
+			usersRef.where("user_id", "==", username)
+				.get()
+				.then((querySnapshot) => {
+					if (querySnapshot.empty) {
+						document.getElementById("show_err").textContent = "User not found";
+						return;
+					}
+
+					querySnapshot.forEach((doc) => {
+						// Check if the password matches
+						if (doc.data().password === password) {
+							// Password matches, redirect to personal banking page
+							window.location.href = "personal_banking.html?username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password);
+						} else {
+							// Password does not match, display error message
+							document.getElementById("show_err").textContent = "Invalid username or password";
+						}
+					});
+				})
+				.catch((error) => {
+					console.error("Error getting user:", error);
+					document.getElementById("show_err").textContent = "An error occurred. Please try again later.";
+				});
+		}
+
+	</script>
 </head>
-<body onload="checkCookie_login();" onunload="sheet_quit();">
+<body onload="checkCookie_login();">
 	<div id="wrap">
 		<div id="top">
 			<a href="main.html" target"_top"><img src="src/logo.jpg" height="100px" width="500px" style="border:0;"></a>
@@ -43,7 +102,7 @@
 				<center>Welcome To <font color="#3399ff">Online Banking</font></center>
 			</div>
 			<div id="login_form">
-				<form name="login_info" onsubmit="return validate();" method="post">
+				<form name="login_info" onsubmit="return validate(event);" method="post">
 					<table id="login_table" border="0">
 						<tr>
 							<td colspan="2"><font id="show_err" color="red"></font></td>

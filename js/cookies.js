@@ -89,7 +89,7 @@ function checkCookie_login()
 	}
 	else
 	{
-		get_excelsheet();
+		//get_excelsheet();
 	}
 }
 var check;

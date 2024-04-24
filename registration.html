@@ -5,7 +5,7 @@
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="css/registration.css">
 	<link rel="stylesheet" type="text/css" href="css/nav_logo.css">
-	<script type="text/javascript" src="js/reg_check.js"></script>
+
 	<script type="text/javascript" src="js/cookies.js"></script>
 	<!--<script type="text/javascript" src="js/excel_login.js"></script>-->
 	<script type="text/javascript" src="js/screen.js"></script>
@@ -19,27 +19,102 @@
 		{
 			//get_excelsheet();
 		}
-		var value_cor;
-		window.onload=function(){
-			display_cor();
-		}
 		
-		function display_cor()
-		{
-			if(document.getElementById("corporate").checked==true)
-			{
-				document.getElementById("corporate_field").style.visibility="visible";
-				document.getElementById("corporate_field").style.display="block";
-				value_cor=1;
+	</script>
+	<!-- Include Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
+	
+	<script type="module">
+		// Import the functions you need from the SDKs you need
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+		import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-analytics.js";
+		// TODO: Add SDKs for Firebase products that you want to use
+		// https://firebase.google.com/docs/web/setup#available-libraries
+	  
+		// Your web app's Firebase configuration
+		// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+		const firebaseConfig = {
+		  apiKey: "AIzaSyC0J2EJSfvhdOeNCJ7hi5JupUmAoiqLMAM",
+		  authDomain: "aspiring-8cf7e.firebaseapp.com",
+		  projectId: "aspiring-8cf7e",
+		  storageBucket: "aspiring-8cf7e.appspot.com",
+		  messagingSenderId: "414896381702",
+		  appId: "1:414896381702:web:0eee893e5e06e850924887",
+		  measurementId: "G-4TET5G58Q9"
+		};
+	  
+		// Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Initialize Firebase Analytics
+        const analytics = firebase.analytics();
+
+	  </script>
+
+	<script>
+		function submitForm(event) {
+			event.preventDefault(); // Prevent form submission
+
+			var formData = new FormData(document.getElementById("registerForm"));
+			var requiredFields = ['title_name', 'fname', 'lname', 'phone_number', 'acc_no', 'user_id', 'password'];
+
+			// Check if any required field is empty or contains placeholder text
+			for (var i = 0; i < requiredFields.length; i++) {
+				var fieldName = requiredFields[i];
+				var fieldValue = formData.get(fieldName);
+
+				// Check if field is empty or contains placeholder text
+				if (!fieldValue || fieldValue.trim() === '' || fieldValue === fieldName.replace('_', ' ')) {
+					alert("Please enter " + fieldName.replace('_', ' '));
+					return; // Stop form submission if any field is empty or contains placeholder text
+				}
 			}
-			else
-			{
-				document.getElementById("corporate_field").style.visibility="hidden";
-				document.getElementById("corporate_field").style.display="none";
-				value_cor=0;
+
+			// Check if Name contains only letters
+			var nameRegex = /^[A-Za-z ]+$/; // Regular expression to match only letters and space
+			var firstName = formData.get('fname');
+			var lastName = formData.get('lname');
+			if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
+				alert("Name must contain only letters");
+				return; // Stop form submission if Name contains invalid characters
 			}
+
+			// Check if Account No. contains numbers only
+			var accNoRegex = /^\d+$/; // Regular expression to match only digits
+			var accNo = formData.get('acc_no');
+			if (!accNoRegex.test(accNo)) {
+				alert("Account No. should contain numbers only");
+				return; // Stop form submission if Account No. contains non-numeric characters
+			}
+
+			// Get a reference to the Firestore database service
+			var db = firebase.firestore();
+
+			// Add a new document with a generated ID
+			db.collection("Users").add({
+				title_name: formData.get('title_name'),
+				fname: firstName,
+				lname: lastName,
+				phone_number: formData.get('phone_number'),
+				acc_no: accNo,
+				user_id: formData.get('user_id'),
+				password: formData.get('password')
+			})
+			.then(function(docRef) {
+				alert("Data added successfully with ID: " + docRef.id);
+				document.getElementById("registerForm").reset(); // Reset the form after successful submission
+			})
+			.catch(function(error) {
+				console.error("Error adding document: ", error);
+				alert("An error occurred. Please try again later.");
+			});
 		}
 	</script>
+
+	  
+	
 </head>
 <body onunload="sheet_quit();">
 	<div id="wrap">
@@ -78,7 +153,7 @@
 			<tr>
 				<td>
 					<div id="personal_info">
-						<form name="register" onsubmit="return check_form();" method="post">
+						<form id="registerForm" onsubmit="submitForm(event)">
 							<table id="form_table" cellpadding="10px">
 								<tr>
 									<th colspan="2" class="heading">Registration Form</th>
