@@ -4,22 +4,7 @@
 	<!--<script type="text/javascript" src="js/my_account.js"></script> -->
 	<script>
 	</script>
-	    <script>
-			// Retrieve URL parameters
-			const urlParams = new URLSearchParams(window.location.search);
-			const username = urlParams.get('username');
-			const password = urlParams.get('password');
-	
-			// Use the username and password as needed
-			console.log("Username:", username);
-			console.log("Password:", password);
-	
-			window.addEventListener('popstate', function(event) {
-				// Delete cookies or perform actions when the back button is pressed
-				deleteCookie(); // Assuming this function deletes the necessary cookies
-			});
-	
-		</script>
+
 </head>
 
 <body>
@@ -90,5 +75,23 @@
 				</td>
 			</tr>
 		</table>
+
+		<script>
+			// Function to retrieve cookie value by name
+			function getCookie(name) {
+				const value = `; ${document.cookie}`;
+				console.log(value)
+				const parts = value.split(`; ${name}=`);
+				if (parts.length === 2) return parts.pop().split(';').shift();
+			}
+	
+			// Retrieve username and password from cookies
+			const username = getCookie('username');
+			const password = getCookie('password');
+	
+			// Use the username and password as needed
+			console.log("Username:", username);
+			console.log("Password:", password);
+		</script>
 </body>
 </html>

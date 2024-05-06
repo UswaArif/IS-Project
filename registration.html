@@ -25,6 +25,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bcryptjs/dist/bcrypt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-sha256"></script>
+
 	
 	<script type="module">
 		// Import the functions you need from the SDKs you need
@@ -88,6 +91,10 @@
 				alert("Account No. should contain numbers only");
 				return; // Stop form submission if Account No. contains non-numeric characters
 			}
+			var password = formData.get('password');
+
+			// Hash the password using SHA-256
+            var hashedPassword = sha256(password);
 
 			// Get a reference to the Firestore database service
 			var db = firebase.firestore();
@@ -100,7 +107,7 @@
 				phone_number: formData.get('phone_number'),
 				acc_no: accNo,
 				user_id: formData.get('user_id'),
-				password: formData.get('password')
+				password: hashedPassword
 			})
 			.then(function(docRef) {
 				alert("Data added successfully with ID: " + docRef.id);

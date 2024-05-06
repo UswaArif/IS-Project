@@ -6,7 +6,8 @@
 	<link rel="stylesheet" type="text/css" href="css/nav_logo.css">
 	<script type="text/javascript" src="js/cookies.js"></script>
 	<!--<script type="text/javascript" src="js/excel_login.js"></script> -->
-
+	<!-- Include sha256.min.js for SHA-256 hashing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
@@ -48,10 +49,13 @@
 					}
 
 					querySnapshot.forEach((doc) => {
-						// Check if the password matches
-						if (doc.data().password === password) {
+						// Compare the hashed input password with the stored hashed password
+						var storedPasswordHash = doc.data().password;
+						var hashedInputPassword = sha256(password);
+
+						if (storedPasswordHash === hashedInputPassword) {
 							// Password matches, redirect to personal banking page
-							window.location.href = "personal_banking.html?username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password);
+							window.location.href = "personal_banking.html?username=" + encodeURIComponent(username)+ "&password=" + encodeURIComponent(password);
 						} else {
 							// Password does not match, display error message
 							document.getElementById("show_err").textContent = "Invalid username or password";

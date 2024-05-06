@@ -2,7 +2,14 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="css/transfer.css">
 	<script type="text/javascript" src="js/transfer_data.js"></script>
-	<script>
+	<!-- Include Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bcryptjs/dist/bcrypt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-sha256"></script>
+
+	<!--<script>
 		var used_rows=parent.excel_sheet.UsedRange.rows.Count;
 		var currentTime=new Date();
 		var month = currentTime.getMonth() + 1;
@@ -12,6 +19,23 @@
 		var time=currentTime.getHours()+":"+currentTime.getMinutes();
 		var accno,name,trans_no_sender=parent.user_trans_sheet.UsedRange.rows.Count;
 		var flag=1;
+	</script> -->
+	<script type="text/javascript">
+		// Initialize Firebase
+		const firebaseConfig = {
+		  apiKey: "AIzaSyC0J2EJSfvhdOeNCJ7hi5JupUmAoiqLMAM",
+		  authDomain: "aspiring-8cf7e.firebaseapp.com",
+		  projectId: "aspiring-8cf7e",
+		  storageBucket: "aspiring-8cf7e.appspot.com",
+		  messagingSenderId: "414896381702",
+		  appId: "1:414896381702:web:0eee893e5e06e850924887",
+		  measurementId: "G-4TET5G58Q9"
+		};
+
+		firebase.initializeApp(firebaseConfig);
+
+		
+		
 	</script>
 </head>
 <body onload="getbal();">
@@ -49,9 +73,13 @@
 					<tr>
 						<td class="field_name">Receiver Account No. :</td>
 						<td>
-							<input type="field" onblur="get_sender();" name="reciever_accno" maxlength=10>
+							<input type="field" onblur="" name="reciever_accno" maxlength=10>
+						</td>
+						<td>
+							<button onclick="somefunction()">Show</button>
 						</td>
 					</tr>
+				
 					<tr>
 						<td class="field_name">Receiver name :</td>
 						<td id="receiver_name"></td>

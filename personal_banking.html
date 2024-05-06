@@ -24,7 +24,28 @@
             document.getElementById("notification").innerHTML=unread_trans;
         }
     </script>-->
+    <script>
+        // Retrieve URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('username');
+        const password = urlParams.get('password');
 
+        // Use the username and password as needed
+        console.log("Username:", username);
+        console.log("Password:", password);
+
+		document.cookie = `username=${username}; expires=Thu, 01 Jan 2026 00:00:00 UTC; path=/`;
+        document.cookie = `password=${password}; expires=Thu, 01 Jan 2026 00:00:00 UTC; path=/`;
+
+
+        function logout() {
+            // Delete cookies or perform logout actions as needed
+            deleteCookie(); // Assuming this function deletes the necessary cookies
+            // Redirect to the home page
+            window.location.href = "main.html";
+        }
+
+    </script>
     <style>
         #container {
             border: 2px solid black;
@@ -73,8 +94,6 @@
                     <li><a href="transaction.html" target="page">Transactions (<span id="notification" style="background-color:red;">0</span>)</a></li>
                     <li><a href="transfer.html" target="page">Transfer</a></li>
                     <li><a href="my_account.html" target="page">My Account</a></li>
-
-
                 </ul>
             </div>
             <div id="my_account" style="float:right;">
